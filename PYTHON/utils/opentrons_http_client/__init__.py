@@ -1,0 +1,1 @@
+from .zeroconfig_ot_2_detector import ZeroConfigOT2Detector

@@ -1,8 +1,10 @@
+set shell := ["powershell.exe", "-c"]
+
 sync:
-  poetry run python3 fjblock.py sync
+  poetry run python fjblock.py sync
 
 add args:
-  poetry run python3 fjblock.py add {{invocation_directory()}}/{{args}}
+  poetry run python fjblock.py add {{invocation_directory()}}/{{args}}
 
 init:
   just init-docs & just init-blocks

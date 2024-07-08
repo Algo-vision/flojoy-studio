@@ -39,6 +39,7 @@ flojoy-cloud = "^0.2.2"
 bcrypt = "^4.1.2"
 tinymovr = "^1.6.5"
 robotframework = "^7.0"
+xarm-python-sdk = { git = "https://github.com/xArm-Developer/xArm-Python-SDK.git" }
 
 [tool.poetry.group.blocks.dependencies]
 scikit-image = "^0.22.0"
