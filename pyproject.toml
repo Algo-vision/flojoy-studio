@@ -40,8 +40,8 @@ bcrypt = "^4.1.2"
 tinymovr = "^1.6.5"
 robotframework = "^7.0"
 xarm-python-sdk = { git = "https://github.com/xArm-Developer/xArm-Python-SDK.git" }
-psutil
-pywin32
+psutil = "*"
+pywin32 = "*"
 
 
 [tool.poetry.group.blocks.dependencies]
