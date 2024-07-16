@@ -165,9 +165,9 @@ const ControlBar = () => {
           </MenubarMenu>
 
           <MenubarMenu>
-            <MenubarTrigger onClick={() => setIsFeedbackModalOpen(true)}>
+            {/* <MenubarTrigger onClick={() => setIsFeedbackModalOpen(true)}>
               Discord
-            </MenubarTrigger>
+            </MenubarTrigger> */}
           </MenubarMenu>
           <MenubarMenu></MenubarMenu>
         </Menubar>
