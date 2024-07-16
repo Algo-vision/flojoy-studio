@@ -2,7 +2,7 @@ from flojoy import String, flojoy
 from PYTHON.utils.opentrons_http_client.api_calls import *
 from PYTHON.utils.opentrons_http_client.types.opentrons_config import OpentronsConfig
 import time
-
+from PYTHON.utils.emergency_stop_handler import EmergencyStopHandler
 @flojoy
 def OT2_CONNECT(ip_address: str) -> String:
     """
@@ -26,4 +26,7 @@ def OT2_CONNECT(ip_address: str) -> String:
     set_lights_state(cfg,lights_state=False)
     time.sleep(0.5)
     set_lights_state(cfg,lights_state=True)
+    def stop_ot_current_run():
+        stop_current_run(cfg)
+    EmergencyStopHandler.register(stop_ot_current_run)
     return String(s=ip_address)

@@ -2,7 +2,7 @@ from flojoy import String
 from xarm.wrapper import XArmAPI 
 
 from PYTHON.utils.mecademic_state.mecademic_mock import MockRobot
-
+from PYTHON.utils.emergency_stop_handler import EmergencyStopHandler
 _robot_handle_map = None
 
 
@@ -48,6 +48,10 @@ def add_handle(ip_address: str):
     robot_handle_map = get_robot_handle_map()
     robot = XArmAPI(ip_address)
     robot_handle_map[ip_address] = robot
+    def emergency_stop():
+        robot.emergency_stop()
+        
+    EmergencyStopHandler.register(emergency_stop)
 
 
 def add_mock_handle(ip_address: str):
@@ -83,3 +87,4 @@ def destruct_handle_map():
     for ip_address in robot_handle_map:
         robot_handle_map[ip_address].disconnect()
     del robot_handle_map
+

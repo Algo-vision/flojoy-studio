@@ -28,5 +28,13 @@ def XARM_CONNECT(ip_address: str) -> String:
     add_handle(ip_address)
 
     robot = query_for_handle(ip_address)
-    
+    robot.clean_warn()
+    robot.clean_error()
+    robot.motion_enable(True)
+    robot.set_mode(0)
+    robot.set_state(0)
+    cur_servo_agnle = robot.get_position()
+    cur_servo_agnle = cur_servo_agnle[1]
+    cur_servo_agnle[0] +=50
+    robot.set_position(*cur_servo_agnle, speed=100, radius=0.0, wait=True)
     return String(s=ip_address)

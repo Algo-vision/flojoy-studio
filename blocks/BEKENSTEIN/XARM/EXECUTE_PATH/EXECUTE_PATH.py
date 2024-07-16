@@ -40,5 +40,7 @@ def EXECUTE_PATH(
     spec.loader.exec_module(xarm)
     robot = xarm.RobotMain(arm)
     robot.run()
+    while(arm.get_state()[1] == 1):
+        ...
 
     return String(s=ip_address.s)
