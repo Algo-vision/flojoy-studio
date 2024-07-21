@@ -38,4 +38,8 @@ def XARM_CONNECT(ip_address: str) -> String:
     cur_servo_agnle = cur_servo_agnle[1]
     cur_servo_agnle[0] +=50
     robot.set_position(*cur_servo_agnle, speed=100, radius=0.0, wait=True)
+    cur_servo_agnle = robot.get_position()
+    cur_servo_agnle = cur_servo_agnle[1]
+    cur_servo_agnle[0] -=50
+    robot.set_position(*cur_servo_agnle, speed=100, radius=0.0, wait=True)
     return String(s=ip_address)

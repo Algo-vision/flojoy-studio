@@ -60,7 +60,7 @@ linux:
 
 win:
   icon: ./public/favicon.ico
-  sign: ./scripts/winSign.js
+  # sign: ./scripts/winSign.js
   target: nsis
 extraMetadata:
   main: out/main/index.js
