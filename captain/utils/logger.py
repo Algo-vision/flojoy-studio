@@ -2,7 +2,14 @@ import os
 import logging
 import yaml
 from captain.utils.blocks_path import get_flojoy_dir
+from pathlib import Path
+import datetime
+home = str(Path.home())
 
+flojoy_logs_dir = home + os.sep + "flojoy_logs"
+os.makedirs(flojoy_logs_dir,exist_ok=True)
+log_name = datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S")+"flojoy.log"
+log_full_path = flojoy_logs_dir+os.sep+log_name
 logger = logging.getLogger("flojoy")
 
 
@@ -21,6 +28,7 @@ def load_log_level_from_config():
 
 
 logging.basicConfig(
+    filename=log_full_path,
     level=load_log_level_from_config(),
     format="[%(asctime)s] - %(name)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",

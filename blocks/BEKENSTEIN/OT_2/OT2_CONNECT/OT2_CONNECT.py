@@ -1,4 +1,4 @@
-from flojoy import String, flojoy
+from flojoy import String, flojoy,logger
 from PYTHON.utils.opentrons_http_client.api_calls import *
 from PYTHON.utils.opentrons_http_client.types.opentrons_config import OpentronsConfig
 import time
@@ -23,14 +23,18 @@ def OT2_CONNECT() -> String:
        The IP address of the robot arm, used in other Mecademic nodes to establish which arm they are communicating with.
     """
     if len(found_devices) >= 1:
+        logger.info("found OT2 device")
         ot_2_dev = found_devices[0]
         cfg =OpentronsConfig(server_address="http://"+ot_2_dev)
     else:
         raise Exception("No OT2 devices Connected")
+    logger.info("Set OT2 lights off")
     set_lights_state(cfg,lights_state=False)
     time.sleep(0.5)
+    logger.info("Set OT2 lights on")
     set_lights_state(cfg,lights_state=True)
     def stop_ot_current_run():
         stop_current_run(cfg)
     EmergencyStopHandler.register(stop_ot_current_run)
+    logger.info("OT2 connected")
     return String(s="http://"+ot_2_dev)
