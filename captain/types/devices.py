@@ -8,6 +8,9 @@ class CameraDevice(BaseModel):
     # either the index or the port (e.g /dev/video0)
     id: str | int
 
+class OT2Device(BaseModel):
+    name : str
+    address: str
 
 class SerialDevice(BaseModel):
     port: str

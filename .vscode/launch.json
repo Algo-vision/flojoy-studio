@@ -7,6 +7,7 @@
     {
       "name": "FastAPI debug",
       "type": "python",
+      "justMyCode": false,
       "request": "launch",
       "module": "uvicorn",
       "args": [

@@ -42,6 +42,7 @@ robotframework = "^7.0"
 xarm-python-sdk = { git = "https://github.com/xArm-Developer/xArm-Python-SDK.git" }
 psutil = "*"
 pywin32 = "*"
+ifaddr = "0.2.0"
 
 
 [tool.poetry.group.blocks.dependencies]

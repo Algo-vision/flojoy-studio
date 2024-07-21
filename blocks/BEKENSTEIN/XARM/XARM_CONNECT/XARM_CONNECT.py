@@ -28,7 +28,8 @@ def XARM_CONNECT(ip_address: str) -> String:
     add_handle(ip_address)
 
     robot = query_for_handle(ip_address)
-    robot.clean_warn()
+    if robot.clean_warn() == 3:
+        raise Exception("check xarm")
     robot.clean_error()
     robot.motion_enable(True)
     robot.set_mode(0)
