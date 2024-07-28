@@ -61,6 +61,9 @@ class __Gen5Manager:
             plate.PowerExportEx("", excel_output_path)
             return True
         else:
-            raise(Exception("Reading is not completed. cannot export excel."))    
+            raise(Exception("Reading is not completed. cannot export excel."))
+    def open_tray(self):
+        self.gen5_app.CarrierOut()
+           
         
 GEN5_MANAGER = __Gen5Manager()

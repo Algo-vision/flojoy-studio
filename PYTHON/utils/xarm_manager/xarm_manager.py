@@ -5,7 +5,6 @@ from PYTHON.utils.mecademic_state.mecademic_mock import MockRobot
 from PYTHON.utils.emergency_stop_handler import EmergencyStopHandler
 _robot_handle_map = None
 
-
 def get_robot_handle_map():
     global _robot_handle_map
     if _robot_handle_map is None:
@@ -43,7 +42,7 @@ def add_handle(ip_address: str):
     TODO: This is blocking synchronous code. Migrate to async await.
     """
     if ip_address in get_robot_handle_map():
-        raise ValueError("Robot handle already exists for IP address: " + ip_address)
+        return
 
     robot_handle_map = get_robot_handle_map()
     robot = XArmAPI(ip_address)
@@ -88,3 +87,4 @@ def destruct_handle_map():
         robot_handle_map[ip_address].disconnect()
     del robot_handle_map
 
+init_handle_map()

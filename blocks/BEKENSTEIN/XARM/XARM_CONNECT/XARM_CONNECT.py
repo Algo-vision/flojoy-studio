@@ -24,7 +24,7 @@ def XARM_CONNECT(ip_address: str) -> String:
     String
        The IP address of the robot arm, used in other Mecademic nodes to establish which arm they are communicating with.
     """
-    init_handle_map(allow_reinit=True)
+    # init_handle_map(allow_reinit=False)
     add_handle(ip_address)
 
     robot = query_for_handle(ip_address)
