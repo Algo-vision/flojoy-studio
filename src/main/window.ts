@@ -61,6 +61,23 @@ export async function createWindow() {
   if (process.platform === "darwin") {
     app.dock.setIcon(nativeImage.createFromPath(getIcon()));
   }
+  if ( ! is.dev && !(await isPortFree(5392))) {
+    const choice = dialog.showMessageBoxSync(global.mainWindow, {
+      type: "question",
+      buttons: ["Exit", "Kill Process"],
+      title: "Existing Server Detected",
+      message:
+        "Seems like there is already a Flojoy server running! Do you want to kill it?",
+      icon: getIcon(),
+    });
+    if (choice == 0) {
+      mainWindow.destroy();
+      app.quit();
+      process.exit(0);
+    } else {
+      await killProcess(5392).catch((err) => log.error(err));
+    }
+  }
   if (!app.isPackaged && devServerUrl) {
     await mainWindow.loadURL(devServerUrl);
   } else {

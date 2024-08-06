@@ -134,7 +134,9 @@ export async function installDependencies(): Promise<string> {
   }
   return await execCommand(new Command(`${poetry} install --no-root`));
 }
-
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+} 
 export async function spawnCaptain(): Promise<void> {
   return new Promise((_, reject) => {
     if (!( isPortFree(5392))) {
@@ -170,7 +172,8 @@ export async function spawnCaptain(): Promise<void> {
           LOCAL_DB_PATH: store.path,
         },
       },
-    );
+    );    
+
 
     global.captainProcess.stdout?.on("data", (data) => {
       log.info(data.toString());
