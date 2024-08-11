@@ -17,9 +17,23 @@ import { ServerStatus } from "@/renderer/types/socket";
 import StatusBar from "@/renderer/routes/common/StatusBar";
 import { InterpretersList } from "src/main/python/interpreter";
 import { useSocketStore } from "@/renderer/stores/socket";
+import { useManifest , useMetadata } from "@/renderer/stores/manifest";
+
 
 export const Index = (): JSX.Element => {
+  const manifest = useManifest();
+  const metadata = useMetadata();
+  const [ManifestLoaded,setManifestLoaded] = useState(false);
+
   const serverStatus = useSocketStore((state) => state.serverStatus);
+  const intervalManifest = setInterval(()=>{
+   if(manifest === undefined && metadata === undefined){
+    setManifestLoaded(false);
+   }
+   else
+   setManifestLoaded(true);
+    
+  },30)
   const [pyInterpreters, setPyInterpreters] = useState<InterpretersList | null>(
     null,
   );
@@ -268,15 +282,18 @@ export const Index = (): JSX.Element => {
     installDependencies,
     setupStatuses,
     spawnCaptain,
+    manifest,
+    metadata
   ]);
 
   useEffect(() => {
     if (
-      ![ServerStatus.OFFLINE, ServerStatus.CONNECTING].includes(serverStatus)
+      ![ServerStatus.OFFLINE, ServerStatus.CONNECTING].includes(serverStatus) && ManifestLoaded
     ) {
-      navigate("/auth");
+      clearInterval(intervalManifest);
+      navigate("/flowchart");  
     }
-  }, [navigate, serverStatus]);
+  }, [navigate, serverStatus,ManifestLoaded]);
 
   return (
     <div className="flex h-screen flex-col bg-muted">
@@ -324,7 +341,7 @@ export const Index = (): JSX.Element => {
                           onClick={handleBrowsePyInterpreter}
                           disabled={selectedInterpreter !== ""}
                         >
-                          Find a interpreter
+                          Find an interpreter
                         </Button>
                         <Button
                           disabled={selectedInterpreter !== ""}
