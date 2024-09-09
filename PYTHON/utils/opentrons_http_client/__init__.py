@@ -1,1 +1,2 @@
 from .zeroconfig_ot_2_detector import ZeroConfigOT2Detector
+from .scan_for_labware_files import scan_for_labware_files

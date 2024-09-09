@@ -33,7 +33,7 @@ export const Index = (): JSX.Element => {
    else
    setManifestLoaded(true);
     
-  },30)
+  },50)
   const [pyInterpreters, setPyInterpreters] = useState<InterpretersList | null>(
     null,
   );
