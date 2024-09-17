@@ -171,7 +171,7 @@ export async function spawnCaptain(): Promise<void> {
         },
       },
     );    
-
+    log.info("execCommand: " + command.getCommand() + "executed");
 
     global.captainProcess.stdout?.on("data", (data) => {
       log.info(data.toString());

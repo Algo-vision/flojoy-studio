@@ -13,27 +13,19 @@ import {
 } from "@/renderer/components/ui/alert-dialog";
 import { Button } from "@/renderer/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ServerStatus } from "@/renderer/types/socket";
 import StatusBar from "@/renderer/routes/common/StatusBar";
 import { InterpretersList } from "src/main/python/interpreter";
-import { useSocketStore } from "@/renderer/stores/socket";
-import { useManifest , useMetadata } from "@/renderer/stores/manifest";
+import {  useManifestStore, useMetadata } from "@/renderer/stores/manifest";
+import { Console } from "console";
 
 
 export const Index = (): JSX.Element => {
-  const manifest = useManifest();
+  const  manifest_store = useManifestStore();
   const metadata = useMetadata();
-  const [ManifestLoaded,setManifestLoaded] = useState(false);
+  const [manifest_interval,setManifestInterval] = useState(null);
+  const [waitForManifest,setWaitForManifest] = useState(false);
 
-  const serverStatus = useSocketStore((state) => state.serverStatus);
-  const intervalManifest = setInterval(()=>{
-   if(manifest === undefined && metadata === undefined){
-    setManifestLoaded(false);
-   }
-   else
-   setManifestLoaded(true);
-    
-  },50)
+  
   const [pyInterpreters, setPyInterpreters] = useState<InterpretersList | null>(
     null,
   );
@@ -273,6 +265,7 @@ export const Index = (): JSX.Element => {
           status: "running",
           message: "Almost there, starting Flojoy Studio...",
         });
+        setWaitForManifest(true);
         spawnCaptain();
         break;
       }
@@ -282,19 +275,30 @@ export const Index = (): JSX.Element => {
     installDependencies,
     setupStatuses,
     spawnCaptain,
-    manifest,
-    metadata
+    metadata,
   ]);
+  const checkIfManifestArrived = useCallback( ()=>{
+    console.log("hit manifest interval");
+    if(manifest_store.standardBlocksManifest != undefined && manifest_store.standardBlocksMetadata != undefined){
+             navigate("/flowchart");
+             setWaitForManifest(false);
+             
+     }
+  },[manifest_store,navigate]);
+
 
   useEffect(() => {
-    if (
-      ![ServerStatus.OFFLINE, ServerStatus.CONNECTING].includes(serverStatus) && ManifestLoaded
-    ) {
-      clearInterval(intervalManifest);
-      navigate("/flowchart");  
-    }
-  }, [navigate, serverStatus,ManifestLoaded]);
 
+    if(waitForManifest){
+      
+    //Implementing the setInterval method
+    const interval = setInterval(checkIfManifestArrived,50);
+    return () => clearInterval(interval);
+    }
+  }, [waitForManifest,checkIfManifestArrived]);
+
+ 
+  
   return (
     <div className="flex h-screen flex-col bg-muted">
       <div className="flex grow flex-col items-center p-4">

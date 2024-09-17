@@ -37,7 +37,7 @@ export const getManifest = (blocksPath?: string) => {
       }
     : undefined;
 
-  return get("blocks/manifest", blockManifestSchema, { searchParams });
+  return get("blocks/manifest/", blockManifestSchema, { searchParams });
 };
 
 export const getMetadata = (
@@ -51,7 +51,7 @@ export const getMetadata = (
       }
     : undefined;
 
-  return get("blocks/metadata", blockMetadataSchema, { searchParams });
+  return get("blocks/metadata/", blockMetadataSchema, { searchParams });
 };
 
 export const getEnvironmentVariables = async () => get("env", EnvVar.array());

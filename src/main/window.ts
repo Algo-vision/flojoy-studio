@@ -9,7 +9,6 @@ import {
 import { update } from "./update";
 import log from "electron-log/main";
 import { cleanup, isPortFree, killProcess } from "./utils";
-
 import { is } from "@electron-toolkit/utils";
 
 import { join } from "node:path";
@@ -61,7 +60,9 @@ export async function createWindow() {
   if (process.platform === "darwin") {
     app.dock.setIcon(nativeImage.createFromPath(getIcon()));
   }
-  if ( ! is.dev && !(await isPortFree(5392))) {
+  const free = await isPortFree(5392);
+  const is_dev = is.dev;
+  if ( !is_dev && !free) {
     const choice = dialog.showMessageBoxSync(global.mainWindow, {
       type: "question",
       buttons: ["Exit", "Kill Process"],
