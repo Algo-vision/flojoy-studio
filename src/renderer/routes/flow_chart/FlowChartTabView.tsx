@@ -17,6 +17,8 @@ import {
   NodeMouseHandler,
   BackgroundVariant,
   Background,
+  EdgeMouseHandler,
+  Edge,
 } from "reactflow";
 import Sidebar from "@/renderer/routes/common/Sidebar/Sidebar";
 import FlowChartKeyboardShortcuts from "./FlowChartKeyboardShortcuts";
@@ -48,6 +50,7 @@ import useKeyboardShortcut from "@/renderer/hooks/useKeyboardShortcut";
 import BlockContextMenu, {
   BlockContextMenuInfo,
 } from "./components/block-context-menu";
+import EdgeContextMenu from "./components/edge-context-menu";
 import { Spinner } from "@/renderer/components/ui/spinner";
 import useWithPermission from "@/renderer/hooks/useWithPermission";
 import nodeTypesMap from "@/renderer/components/blocks/block-types";
@@ -77,6 +80,7 @@ import { useContextMenu } from "@/renderer/hooks/useContextMenu";
 import { Link } from "react-router-dom";
 import FlowControlButtons from "./views/ControlBar/FlowControlButtons";
 import { Input } from "@/renderer/components/ui/input";
+import { EdgeContextMenuInfo } from "./components/edge-context-menu";
 
 const edgeTypes = {
   default: CustomEdge,
@@ -102,7 +106,6 @@ const FlowChartTab = () => {
   const [pythonString, setPythonString] = useState("...");
   const [nodeFilePath, setNodeFilePath] = useState("...");
   const [blockFullPath, setBlockFullPath] = useState("");
-
   const { nodes, edges, textNodes, handleNodeChanges, handleEdgeChanges } =
     useProjectStore(
       useShallow((state) => ({
@@ -241,6 +244,9 @@ const FlowChartTab = () => {
   const { menu, setMenu, flowRef, onPaneClick } =
     useContextMenu<BlockContextMenuInfo>();
 
+  const edge_menu_handlers =
+    useContextMenu<EdgeContextMenuInfo>();
+
   const onNodeContextMenu: NodeMouseHandler = useCallback(
     (event, node: Node<BlockData>) => {
       // Prevent native context menu from showing
@@ -266,6 +272,31 @@ const FlowChartTab = () => {
       });
     },
     [flowRef, metadata, setMenu],
+  );
+  
+
+  const onEdgeContextMenu :EdgeMouseHandler= useCallback(
+    (event, edge:Edge) => {
+      // Prevent native context menu from showing
+      event.preventDefault();
+
+      // Calculate position of the context menu. We want to make sure it
+      // doesn't get positioned off-screen.
+      if (flowRef.current === null || !metadata) {
+        return;
+      }
+
+      const offset = calculateContextMenuOffset(
+        event.clientX,
+        event.clientY,
+        flowRef.current,
+      );
+      edge_menu_handlers.setMenu({
+        edge: edge,
+       ...offset
+      });
+    },
+    [edge_menu_handlers,flowRef, metadata,],
   );
 
   const addBlockReady = manifest !== undefined;
@@ -458,6 +489,7 @@ const FlowChartTab = () => {
               padding: 0.8,
             }}
             onNodeContextMenu={onNodeContextMenu}
+            onEdgeContextMenu={onEdgeContextMenu}
             onPaneClick={onPaneClick}
           >
             <Background color="#a6a6a6" variant={BackgroundVariant.Dots} />
@@ -488,6 +520,9 @@ const FlowChartTab = () => {
                 {...menu}
               />
             )}
+            {
+              edge_menu_handlers.menu && (<EdgeContextMenu {...edge_menu_handlers.menu} onClick={edge_menu_handlers.onPaneClick}/>)
+            }
           </ReactFlow>
 
           <BlockExpandMenu

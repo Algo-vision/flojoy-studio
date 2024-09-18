@@ -687,6 +687,21 @@ export const useDeleteBlock = () => {
   );
 };
 
+export const useDeleteEdge = () => {
+  const setEdges = useProtectedSetter("edges");
+
+  return useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (edgeId: string) => {
+      setEdges((prev) =>
+        prev.filter((edge) => edge.id !== edgeId),
+      );
+      // sendEventToMix(MixPanelEvents.nodeDeleted, { nodeTitle: nodeLabel });
+    },
+    [setEdges],
+  );
+};
+
 export const useDuplicateBlock = () => {
   const setNodes = useProtectedSetter("nodes");
 
