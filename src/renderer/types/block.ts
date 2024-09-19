@@ -48,6 +48,5 @@ export const positionSchema = z.object({
 });
 
 export type EdgeData = {
-  id :string;
   outputType: EdgeVariant;
 };
