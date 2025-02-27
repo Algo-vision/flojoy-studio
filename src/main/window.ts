@@ -9,13 +9,12 @@ import {
 import { update } from "./update";
 import log from "electron-log/main";
 import { cleanup, isPortFree, killProcess } from "./utils";
-
 import { is } from "@electron-toolkit/utils";
 
 import { join } from "node:path";
 import { DIST_ELECTRON, PUBLIC_DIR } from "./consts";
 
-const getIcon = () => {
+export const getIcon = () => {
   switch (process.platform) {
     case "win32":
       return join(PUBLIC_DIR, "favicon.ico");
@@ -25,7 +24,6 @@ const getIcon = () => {
       return join(PUBLIC_DIR, "favicon.png");
   }
 };
-
 // Here, you can also use other preload
 const preload = join(__dirname, `../preload/index.js`);
 
@@ -62,7 +60,9 @@ export async function createWindow() {
   if (process.platform === "darwin") {
     app.dock.setIcon(nativeImage.createFromPath(getIcon()));
   }
-  if (!(await isPortFree(5392))) {
+  const free = await isPortFree(5392);
+  const is_dev = is.dev;
+  if ( !is_dev && !free) {
     const choice = dialog.showMessageBoxSync(global.mainWindow, {
       type: "question",
       buttons: ["Exit", "Kill Process"],

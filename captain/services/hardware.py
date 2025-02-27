@@ -13,7 +13,9 @@ from captain.types.devices import (
     VISADevice,
     NIDAQmxDevice,
     NIDMMDevice,
+    OT2Device
 )
+from PYTHON.utils.opentrons_http_client.zeroconfig_ot_2_detector import ZeroConfigOT2Detector
 
 __all__ = ["get_device_finder"]
 

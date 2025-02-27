@@ -3,7 +3,7 @@
 # python
 /venv
 /venv2
-
+poetry.lock
 # dependencies
 /node_modules
 /.pnp

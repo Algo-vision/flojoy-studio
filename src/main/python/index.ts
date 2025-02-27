@@ -14,7 +14,11 @@ import { existsSync, mkdirSync, readFileSync } from "fs";
 import { poetryGroupEnsureValid } from "./poetry";
 import { store } from "../store";
 import { join } from "path";
-
+import { cleanup, isPortFree, killProcess } from "../utils";
+import {
+  dialog,
+} from "electron";
+import {getIcon} from "../window"
 export async function checkPythonInstallation(
   _,
   force?: boolean,
@@ -133,6 +137,24 @@ export async function installDependencies(): Promise<string> {
 
 export async function spawnCaptain(): Promise<void> {
   return new Promise((_, reject) => {
+    if (!( isPortFree(5392))) {
+      const choice = dialog.showMessageBoxSync(global.mainWindow, {
+        type: "question",
+        buttons: ["Continue", "Kill Process"],
+        title: "Existing Server Detected",
+        message:
+          "Seems like there is already a Flojoy server running! Do you want to kill it?",
+        icon: getIcon(),
+      });
+      if (choice == 0) {
+        mainWindow.destroy();
+        app.quit();
+        process.exit(0);
+      } else {
+        killProcess(5392).catch((err) => log.error(err));
+      }
+    }
+
     const poetry = process.env.POETRY_PATH ?? "poetry";
     const command = new Command(`${poetry} run python main.py`);
 
@@ -148,7 +170,8 @@ export async function spawnCaptain(): Promise<void> {
           LOCAL_DB_PATH: store.path,
         },
       },
-    );
+    );    
+    log.info("execCommand: " + command.getCommand() + "executed");
 
     global.captainProcess.stdout?.on("data", (data) => {
       log.info(data.toString());

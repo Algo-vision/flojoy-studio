@@ -9,7 +9,7 @@ from typing import Any, cast
 import networkx as nx
 from flojoy import JobFailure, JobSuccess, get_next_directions
 from flojoy.utils import clear_flojoy_memory  # for some reason, can't import from
-
+from PYTHON.utils.emergency_stop_handler import EmergencyStopHandler
 from captain.types.worker import JobInfo
 from captain.utils.logger import logger
 
@@ -119,6 +119,7 @@ class Topology:
     def cancel(self):
         logger.debug("Topology cancelled")
         self.cancelled = True
+        EmergencyStopHandler.STOP_ALL()
         self.queued_jobs.clear()
         self.cleanup()
         self.finalizer()

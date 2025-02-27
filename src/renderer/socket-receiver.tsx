@@ -33,10 +33,17 @@ export const SocketReceiver = () => {
     );
 
   const doFetch = useCallback(async () => {
+    let is_manifest = false;
+    while(!is_manifest){
     const res = await fetchManifest();
     if (res.isErr()) {
       toastQueryError(res.error, "Error fetching blocks info.");
+      continue;
     }
+    else
+     is_manifest = true;
+    }
+   
   }, [fetchManifest]);
 
   const deviceSettings = useSettingsStore((state) => state.device);

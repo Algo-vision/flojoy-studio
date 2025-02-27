@@ -13,13 +13,19 @@ import {
 } from "@/renderer/components/ui/alert-dialog";
 import { Button } from "@/renderer/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ServerStatus } from "@/renderer/types/socket";
 import StatusBar from "@/renderer/routes/common/StatusBar";
 import { InterpretersList } from "src/main/python/interpreter";
-import { useSocketStore } from "@/renderer/stores/socket";
+import {  useManifestStore, useMetadata } from "@/renderer/stores/manifest";
+import { Console } from "console";
+
 
 export const Index = (): JSX.Element => {
-  const serverStatus = useSocketStore((state) => state.serverStatus);
+  const  manifest_store = useManifestStore();
+  const metadata = useMetadata();
+  const [manifest_interval,setManifestInterval] = useState(null);
+  const [waitForManifest,setWaitForManifest] = useState(false);
+
+  
   const [pyInterpreters, setPyInterpreters] = useState<InterpretersList | null>(
     null,
   );
@@ -88,9 +94,9 @@ export const Index = (): JSX.Element => {
 
   const installDependencies = useCallback(async (): Promise<void> => {
     try {
-      await window.api.installPipx();
-      await window.api.pipxEnsurepath();
-      await window.api.installPoetry();
+      // await window.api.installPipx();
+      // await window.api.pipxEnsurepath();
+      // await window.api.installPoetry();
       await window.api.installDependencies();
 
       updateSetupStatus({
@@ -259,6 +265,7 @@ export const Index = (): JSX.Element => {
           status: "running",
           message: "Almost there, starting Flojoy Studio...",
         });
+        setWaitForManifest(true);
         spawnCaptain();
         break;
       }
@@ -268,16 +275,30 @@ export const Index = (): JSX.Element => {
     installDependencies,
     setupStatuses,
     spawnCaptain,
+    metadata,
   ]);
+  const checkIfManifestArrived = useCallback( ()=>{
+    console.log("hit manifest interval");
+    if(manifest_store.standardBlocksManifest != undefined && manifest_store.standardBlocksMetadata != undefined){
+             navigate("/flowchart");
+             setWaitForManifest(false);
+             
+     }
+  },[manifest_store,navigate]);
+
 
   useEffect(() => {
-    if (
-      ![ServerStatus.OFFLINE, ServerStatus.CONNECTING].includes(serverStatus)
-    ) {
-      navigate("/auth");
-    }
-  }, [navigate, serverStatus]);
 
+    if(waitForManifest){
+      
+    //Implementing the setInterval method
+    const interval = setInterval(checkIfManifestArrived,50);
+    return () => clearInterval(interval);
+    }
+  }, [waitForManifest,checkIfManifestArrived]);
+
+ 
+  
   return (
     <div className="flex h-screen flex-col bg-muted">
       <div className="flex grow flex-col items-center p-4">
@@ -324,7 +345,7 @@ export const Index = (): JSX.Element => {
                           onClick={handleBrowsePyInterpreter}
                           disabled={selectedInterpreter !== ""}
                         >
-                          Find a interpreter
+                          Find an interpreter
                         </Button>
                         <Button
                           disabled={selectedInterpreter !== ""}

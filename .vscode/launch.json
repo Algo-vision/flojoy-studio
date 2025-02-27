@@ -7,6 +7,7 @@
     {
       "name": "FastAPI debug",
       "type": "python",
+      "justMyCode": false,
       "request": "launch",
       "module": "uvicorn",
       "args": [
@@ -21,7 +22,7 @@
         "DEBUG": "True",
         "FASTAPI_LOG": "debug"
       }
-    }
+    },
     // {
     //   "name": "RQ Worker",
     //   "type": "python",
@@ -42,5 +43,42 @@
     //     "port": 5679
     //   }
     // }
+    {
+      "name": "Debug Main Process",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron-vite",
+      "windows": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron-vite.ps1"
+      },
+      "runtimeArgs": ["--sourcemap"],
+      "env": {
+        "REMOTE_DEBUGGING_PORT": "9222",
+        "ELECTRON_IS_DEV" :"1",
+      },
+      "console": "integratedTerminal"
+      
+    },
+    {
+      "name": "Debug Renderer Process",
+      "port": 9222,
+      "request": "attach",
+      "type": "chrome",
+      "webRoot": "${workspaceFolder}/src/renderer",
+      "timeout": 60000,
+      "presentation": {
+        "hidden": true
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug All",
+      "configurations": ["Debug Main Process", "Debug Renderer Process"],
+      "presentation": {
+        "order": 1
+      }
+    }
   ]
 }
