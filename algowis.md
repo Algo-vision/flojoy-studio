@@ -29,3 +29,12 @@ The backend is made of 3 parts:
     In order to execute xarm preloaded protocol we use python module loading mechanism. the loded file containes a class named `RobotMain` wich needed to be instanciated eith the xarm device instance as argument. After instanciation you may call ROBOTMain.run() in order to execute the protocol. Look in the XARM/EXECUTE_PATH block in order to see it in use.
 
     Also there is an emergency stop handler that get executed when pressing the Cancel button. If you implement some code block that might need to be terminated immedietly, don't forget to implement "terminate()" method and register it in the emergency stop registery!
+
+
+## Building the project for installation
+
+In order to create installation executable of the whole project, open an administrator privileged PowerShell terminal, navigate to the repository directory and run:
+
+`pnpm run electron-package:windows`
+
+It will build the project and generate installation file in 'dist' directory.
