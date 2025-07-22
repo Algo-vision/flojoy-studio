@@ -7,6 +7,25 @@ import tempfile
 def EXPORT_SYNERGY_RESULTS(output_directory:Directory,
                              experiment_name:str,
                              is_measure_completed:Boolean) -> String:
+    """The EXPORT_SYNERGY_RESULTS exports the latest run result to a specific directory.
+  
+    Returns the newly created file path .
+
+    Parameters
+    ----------
+    output_directory : Directory
+        Desired location for writing results
+    experiment_name : str
+        User selected unique experiment name
+    is_measure_completed : Boolean
+        REcive signal for run finish.
+
+    Returns
+    -------
+    DataContainer
+      String: Newly created results excel file absolute path.
+    """
+    
     os.makedirs(output_directory.unwrap(),exist_ok=True)
     current_time = datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
     output_file_path  = (output_directory.unwrap()+os.sep+f"{current_time}_{experiment_name}.xlsx").replace("/","\\")

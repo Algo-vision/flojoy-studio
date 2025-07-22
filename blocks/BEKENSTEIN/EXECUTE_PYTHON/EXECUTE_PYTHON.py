@@ -32,6 +32,8 @@ def EXECUTE_PYTHON(
     # creates a new module based on spec
     analyze = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(analyze)
+
+    # The mathod signature maust follow the structure: def analyze(input_excel_file_path, output_directory)
     ret = analyze.analyze(excel_file_path.s,output_dir.unwrap())
     return Scalar(c = ret)
 
