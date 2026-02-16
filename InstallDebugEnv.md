@@ -36,6 +36,7 @@ scoop install main/git
 Install FNM:
 ```
 scoop install main/fnm
+New-Item -ItemType File -Force -Path $PROFILE
 Add-Content -Path $PROFILE -Value "fnm env --use-on-cd | Out-String | Invoke-Expression"
 ```
 
