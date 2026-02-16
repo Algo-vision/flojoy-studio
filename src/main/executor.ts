@@ -22,7 +22,9 @@ export function execCommand(
     }
 
     const child = exec(cmd, {
-      cwd: app.isPackaged ? process.resourcesPath : undefined,
+      cwd: app.isPackaged ? process.resourcesPath : undefined, env: {
+        PATH: process.env.PATH
+    }
     });
 
     let stdout = "";
